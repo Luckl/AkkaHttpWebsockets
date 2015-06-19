@@ -1,0 +1,14 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "description": "Client application for socko project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "Luc Klaassen",
+  "license": "ISC"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "description": "Client application for socko project",
+  "main": "index.js",
+  "keywords": [
+    "Socko"
+  ],
+  "authors": [
+    "Luc Klaassen"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
