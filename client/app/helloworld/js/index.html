@@ -3,10 +3,21 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-    <script src="index.js"></script>
+<script src="Canvas.js"></script>
+<script src="services/Connector.js"></script>
+<script src="services/SocketConnector.js"></script>
+<script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
+<script type="application/javascript">
+    $(function () {
+            canvas = new Canvas("ws://localhost:9000/helloworld")
+    })
+</script>
+<input type="button" onclick="canvas.send('Hallo')">
 
-    <input type="button" onclick="socketConnector.send('Hallo')">
+<br/>
+<canvas id="game"></canvas>
 </body>
 </html>
