@@ -35,7 +35,7 @@ class Player {
 
             return this.checkLocation(world, location);
         } else {
-            return location
+            return location;
         }
     }
 

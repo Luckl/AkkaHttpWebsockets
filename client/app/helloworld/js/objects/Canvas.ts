@@ -14,7 +14,9 @@ class Canvas {
     constructor(url:string) {
         this.canvas = oCanvas.create({
             canvas: "#game",
-            fps: 60
+            fps: 60,
+            disableScrolling: true,
+            drawEachFrame: false
         });
 
         this.world = new World(this.canvas.width, this.canvas.height);
@@ -38,8 +40,8 @@ class Canvas {
             this.player.image.stop();
 
             var currentLocation = [
-                Math.floor(this.player.image.abs_x / this.world.tileWidth),
-                Math.floor(this.player.image.abs_y / this.world.tileHeight)
+                Math.round(this.player.image.abs_x / this.world.tileWidth),
+                Math.round(this.player.image.abs_y / this.world.tileHeight)
             ];
 
             this.player.location = this.world.getTileFromCell(currentLocation);

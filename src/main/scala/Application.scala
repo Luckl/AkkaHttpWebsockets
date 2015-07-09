@@ -1,27 +1,22 @@
-import akka.actor.{ActorLogging, ActorSystem}
-import org.mashupbots.socko.infrastructure.Logger
-import org.mashupbots.socko.routes._
-import org.mashupbots.socko.webserver.{WebServer, WebServerConfig}
+import akka.actor._
+import akka.http.Http
+import akka.http.server.Directives._
+import akka.stream.ActorFlowMaterializer
+import akka.stream.scaladsl.Flow
 
-object Application extends App with Logger{
+object Application extends App {
 
-  val system = ActorSystem("System")
-  var calls = 0
+  implicit val system = ActorSystem("api")
+  implicit val materializer = ActorFlowMaterializer()
+  implicit val executor = system.dispatcher
 
-  val routes = Routes({
-    case HttpRequest(httpRequest) => httpRequest match {
-      case Path("/helloworld/") => httpRequest.response.write("Sup son")
-    }
-    case WebSocketHandshake(wsHandshake) => wsHandshake match {
-      case Path("/helloworld/") => wsHandshake.authorize()
-    }
-    case WebSocketFrame(wsFrame) =>
-      calls += 1
-      log.debug(s"We have received $calls calls")
-      wsFrame.writeText(calls.toString)
+  val route =
+    get {
+      pathSingleSlash {
+        getFromResource("index.html")
+      }
+    } ~
+      getFromResourceDirectory("")
 
-  })
-
-  val webServer = new WebServer(WebServerConfig(), routes, system)
-  webServer.start()
+  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
 }
