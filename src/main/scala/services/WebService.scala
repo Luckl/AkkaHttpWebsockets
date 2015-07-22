@@ -1,18 +1,23 @@
 package services
 
 import actors.{PublisherActor, SubscriberActor}
-import akka.actor.{ActorLogging, Props, ActorSystem}
+import akka.actor.{Props, ActorSystem}
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 
 import akka.http.scaladsl.server.Directives
-import akka.stream.{Outlet, Materializer}
-import akka.stream.actor.ActorPublisher
-import akka.stream.scaladsl.{Source, FlowGraph, Flow}
+import akka.stream.Materializer
+import akka.stream.scaladsl.{Source, Flow}
+import scala.concurrent.duration._
+
 
 class WebService(implicit fm: Materializer, system: ActorSystem) extends Directives {
 
-  val subscriber = system.actorOf(Props[SubscriberActor], "Subscriber")
-  val publisher = system.actorOf(PublisherActor.props, "Publisher")
+  import system.dispatcher
+  system.scheduler.schedule(15 second, 15 second) {
+    println("Timer message!")
+  }
+//  val subscriber = system.actorOf(Props[SubscriberActor], "Subscriber")
+//  val publisher = system.actorOf(PublisherActor.props, "Publisher")
 
   def route =
     get {
@@ -22,8 +27,7 @@ class WebService(implicit fm: Materializer, system: ActorSystem) extends Directi
         path("helloworld") {
           handleWebsocketMessages(websocketActorFlow)
         }
-    } ~
-      getFromResourceDirectory("web")
+    }
 
 
   /*
@@ -32,17 +36,7 @@ class WebService(implicit fm: Materializer, system: ActorSystem) extends Directi
   kunnen worden
    */
   def websocketActorFlow: Flow[Message, Message, Unit] =
-    Flow[Message, Message]() { implicit b =>
-
-      val sendToActor = b.add(Flow[Message].map {
-        case TextMessage.Strict(msg) => subscriber ! msg
-      })
-
-      val receiveFromActor = b.add(Source[Message](ActorPublisher.apply[Message](publisher)))
-
-      (sendToActor.inlet, receiveFromActor)
-
-    }
+    Flow[Message]
 }
 
 

@@ -120,3 +120,7 @@ src_managed/
 project/boot/
 .history
 .cache
+
+### Typescript ###
+
+*.js.map

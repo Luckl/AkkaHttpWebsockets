@@ -4,10 +4,14 @@ import actors.SubscriberActor.Msg
 import akka.actor.{Actor, ActorLogging}
 
 object SubscriberActor {
+
   case class Msg(message: String)
+
 }
 
-class SubscriberActor extends Actor with ActorLogging{
+class SubscriberActor extends Actor with ActorLogging {
+
+  log.info("Created subscriber")
 
   def handleMessage(message: String): Unit = {
     log.debug(message)
