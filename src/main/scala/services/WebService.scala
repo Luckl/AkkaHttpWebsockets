@@ -16,8 +16,6 @@ class WebService(implicit fm: Materializer, system: ActorSystem) extends Directi
   system.scheduler.schedule(15 second, 15 second) {
     println("Timer message!")
   }
-//  val subscriber = system.actorOf(Props[SubscriberActor], "Subscriber")
-//  val publisher = system.actorOf(PublisherActor.props, "Publisher")
 
   def route =
     get {
@@ -29,14 +27,12 @@ class WebService(implicit fm: Materializer, system: ActorSystem) extends Directi
         }
     }
 
-
-  /*
-  Flow waar als source Messages uitkomen, en Messages terug verwacht worden.
-  Waarschijnlijk de bedoeling dat deze flow terug met een publisherActor wordt gekoppeld waar berichten naar gestuurd
-  kunnen worden
-   */
   def websocketActorFlow: Flow[Message, Message, Unit] =
-    Flow[Message]
+    Flow[Message].collect({
+      case TextMessage.Strict(msg) =>
+        println(msg)
+        TextMessage.Strict(msg.reverse)
+    })
 }
 
 
