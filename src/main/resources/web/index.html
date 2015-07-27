@@ -8,21 +8,32 @@ Page has been loaded<br/>
 <script type="application/javascript">
 
     var connection;
+
     function sendMessage() {
         connection.send(document.getElementById("inputMessage").value);
     }
 
     document.addEventListener("DOMContentLoaded", function (event) {
-        connection = new WebSocket("ws://localhost:8080/helloworld");
+        setTimeout(function() {
+            connection = new WebSocket("ws://localhost:8080/helloworld");
 
-        connection.onopen = function (event) {
-            connection.send("connection established");
-        };
+            connection.onopen = function (event) {
+                connection.send("connection established");
+            };
 
-        connection.onmessage = function (event) {
-            console.log(event.data);
-            document.getElementById("response").innerHTML = event.data;
-        }
+            connection.onerror = function (event) {
+                console.log(event)
+            };
+
+            connection.onmessage = function (event) {
+                console.log(event.data);
+                document.getElementById("response").innerHTML = event.data;
+            };
+        }, 500);
+
+        setInterval(function () {
+            connection.send("Ping!")
+        }, 1000);
     });
 </script>
 </body>
